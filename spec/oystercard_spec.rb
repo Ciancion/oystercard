@@ -19,15 +19,21 @@ describe Oystercard do
     expect{subject.deduct(1)}.to change{subject.balance}.by -1
   end
 
-  it "in journey defaults to false" do
-    expect(subject.in_journey).to be(false)
+  it "in journey defaults" do
+    expect(subject.in_journey?).to be(false)
   end
 
  it "touch in changes journey to true" do
-   expect(subject.touch_in).to be(true)
+   subject.top_up(5)
+   expect(subject.touch_in).to eq("in use")
  end
 
-it "touch out change journey to false" do
-  expect(subject.touch_out).to be(false)
-end
+  it "touch out change journey to false" do
+    expect(subject.touch_out).to eq("complete")
+  end
+
+  it "check min balance" do
+  expect{subject.touch_in}.to raise_error("The card does not have enought money")
+  end
+
 end
