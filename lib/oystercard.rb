@@ -1,11 +1,13 @@
 class Oystercard
 
-  attr_accessor :balance, :state
+  attr_accessor :balance, :state, :entry_station
     CARD_LIMIT = 90
     MIN_BALANCE = 1
+
   def initialize
     @balance = 0
     @state = "complete"
+    @entry_station = nil
   end
 
   def top_up(money)
@@ -13,22 +15,26 @@ class Oystercard
     @balance += money
   end
 
-  def deduct(money)
-    @balance -= money
-  end
-
-  def touch_in
+  def touch_in(entry_station)
    raise("The card does not have enought money") if @balance < MIN_BALANCE
-   self.state = "in use"
+   @entry_station = entry_station
+   in_journey?
   end
 
   def touch_out
-    self.state = "complete"
+    money = 5
+    deduct(money)
+    @entry_station = nil
+    in_journey?
   end
 
   def in_journey?
-    state == "in use"
+    @entry_station != nil ? "in use" : "complete"
   end
 
+  private
+  def deduct(money)
+    @balance -= money
+  end
 
 end
