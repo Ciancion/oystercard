@@ -1,6 +1,6 @@
 class Oystercard
 
-  attr_accessor :balance, :state, :entry_station
+  attr_accessor :balance, :state, :entry_station, :exit_station, :journey_history
     CARD_LIMIT = 90
     MIN_BALANCE = 1
 
@@ -8,6 +8,7 @@ class Oystercard
     @balance = 0
     @state = "complete"
     @entry_station = nil
+    @journey_history = []
   end
 
   def top_up(money)
@@ -21,10 +22,13 @@ class Oystercard
    in_journey?
   end
 
-  def touch_out
+  def touch_out(exit_station)
     money = 5
     deduct(money)
+    @exit_station = exit_station
+    @journey_history << {@entry_station => @exit_station}
     @entry_station = nil
+  
     in_journey?
   end
 

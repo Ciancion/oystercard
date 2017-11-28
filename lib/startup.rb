@@ -1,4 +1,12 @@
 require './lib/oystercard.rb'
 
-oystercard = Oystercard.new
-oyster.touch_in 
+oyster = Oystercard.new
+oyster.top_up(20)
+oyster.touch_in("algate")
+oyster.touch_out("balham")
+
+p oyster.journey_history
+
+oyster.touch_in("algate")
+oyster.touch_out("hackney")
+p oyster.journey_history
