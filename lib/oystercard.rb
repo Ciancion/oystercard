@@ -25,18 +25,16 @@ class Oystercard
 
   def start_journey(entry_station)
     raise("The card does not have enought money") if @balance < MIN_BALANCE
-    journey = Journey.new
     @journey.start(entry_station)
   end
   def finish_deduct_journey(exit_station)
     journey.complete(exit_station)
-    record_journey
     deduct(journey.calculate_fare)
+    record_journey
   end
 
   def touch_out(exit_station)
     finish_deduct_journey(exit_station)
-    journey = Journey.new
   end
 
   def in_journey?
@@ -45,6 +43,7 @@ class Oystercard
 
   def record_journey
     @journey_history << journey
+    journey = Journey.new
   end
 
   private
