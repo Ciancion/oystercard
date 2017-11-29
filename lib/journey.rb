@@ -1,6 +1,7 @@
 class Journey
- attr_accessor :entry_station, :exit_station
-
+  attr_accessor :entry_station, :exit_station
+  MIN_FARE = 1
+  
   def start(entry_station)
     self.entry_station = entry_station
   end
@@ -10,7 +11,7 @@ class Journey
   end
 
   def calculate_fare
-     entry_station && exit_station ? 1 : 6
+     entry_station && exit_station ? MIN_FARE : 6
   end
 
 
