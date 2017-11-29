@@ -35,7 +35,6 @@ describe Oystercard do
   end
 
   it "deduct correct amount of balance when touch out" do
-    # subject.top_up(10)
     expect{subject.touch_out(exit_station)}.to change{subject.balance}.by -6
   end
 
