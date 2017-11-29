@@ -1,8 +1,10 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
   let(:entry_station) {double :station}
   let(:exit_station) {double :station}
+  let(:journey) {double :journey}
   before do
     subject.top_up(20)
   end
@@ -24,13 +26,8 @@ describe Oystercard do
   end
 
   it "in journey defaults" do
-    expect(subject.in_journey?).to eq("complete")
+    expect(subject.in_journey?).to eq(false)
   end
-
- it "touch in changes journey to true" do
-   subject.top_up(5)
-   expect(subject.touch_in(entry_station)).to eq("in use")
- end
 
   it "check min balance" do
   card = Oystercard.new
@@ -39,39 +36,29 @@ describe Oystercard do
 
   it "deduct correct amount of balance when touch out" do
     # subject.top_up(10)
-    expect{subject.touch_out(exit_station)}.to change{subject.balance}.by -5
+    expect{subject.touch_out(exit_station)}.to change{subject.balance}.by -6
   end
 
   it "remember entry station" do
-    # subject.top_up(12)
     subject.touch_in("aldgate")
-    expect(subject.entry_station).to eq("aldgate")
+    expect(subject.journey.entry_station).to eq("aldgate")
   end
 
   it "forget entry station" do
-    # subject.top_up(12)
     subject.touch_in("aldgate")
     subject.touch_out(exit_station)
     expect(subject.entry_station).to eq(nil)
   end
 
-  it "infer status in use" do
-    # subject.top_up(12)
-    subject.touch_in(entry_station)
-    expect(subject.in_journey?).to eq("in use")
-  end
-
-  it "infer status complete" do
-    # subject.top_up(12)
+  it "infer status false" do
     subject.touch_in(entry_station)
     subject.touch_out(exit_station)
-    expect(subject.in_journey?).to eq("complete")
+    expect(subject.in_journey?).to eq(false)
   end
 
   it "remember exit station" do
-    # subject.top_up(12)
     subject.touch_out("balham")
-    expect(subject.exit_station).to eq("balham")
+    expect(subject.journey.exit_station).to eq("balham")
   end
 
   it "save journey" do
@@ -85,7 +72,14 @@ describe Oystercard do
   it "check that touching in and touching out creates one journey" do
     subject.touch_in("aldgate")
     subject.touch_out("balham")
-    expect(subject.journey_history).to eq([{"aldgate" => "balham"}])
+    expect(subject.journey_history[0].entry_station).to eq("aldgate")
+  end
+  it "check touch in station different to nil" do
+    expect(subject.touch_in(entry_station)).to_not eq(nil)
+  end
+
+  it "check if record journey" do
+    expect(subject.record_journey).to_not eq(nil)
   end
 
 end
